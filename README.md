@@ -1,0 +1,1 @@
+En el contenedor de Tomcat, la ruta que carga los archivos en la app web es, /usr/local/tomcat/webapps/ROOT
