@@ -19,6 +19,8 @@
         String envUser = System.getenv("JDBC_USER");
         String envPass = System.getenv("JDBC_PASSWORD");
         con = DriverManager.getConnection(envURL, envUser, envPass);
+
+        if(con!=null)out.println("Conexión establecida");
         
         String sql = "SELECT * FROM usuarios WHERE mail = ? AND password = ?";
         stmt = con.prepareStatement(sql);
@@ -28,9 +30,10 @@
         rs = stmt.executeQuery();
 
         if (rs.next()) {
-            response.sendRedirect("home/home.jsp");
+            out.println("Usuario correcto");
+            response.sendRedirect("home/home");
         } else {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("index");
         }
     } catch (Exception e) {
         e.printStackTrace();
