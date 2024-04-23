@@ -19,30 +19,38 @@
         integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
         crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="/registro/style/login.css">
 </head>
 
 <body>
-    <h1>Gestion de Peliculas</h1>
+    <h1>Iniciar Sesion</h1>
 
-    <form action="get">
+    <form action="loginServlet.jsp" method="post">
         <div class="form-group">
             <label for="mail">Direccion email</label>
-            <input type="email" class="form-control" id="mail" aria-describedby="emailHelp"
-                placeholder="Introduce email" default="user@user">
+            <input type="email" class="form-control" id="mail" name="mail" aria-describedby="emailHelp"
+                placeholder="Introduce email" value="user@user.es">
             <small id="emailHelp" class="form-text text-muted">Nunca compartiremos tu correo electr&oacute;nico con
                 nadie
-                m&aacute;s.</small>
+                m&aacute;s.
+            </small>
         </div>
         <div class="form-group">
             <label for="password">Contrase&ntilde;a</label>
-            <input type="password" class="form-control" id="password" placeholder="Contrase&ntilde;a" default="user">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Contrase&ntilde;a" value="user">
         </div>
         <div class="form-group form-check">
             <input type="checkbox" class="form-check-input" id="recuerdame">
             <label class="form-check-label" for="recuerdame">Recuerdame</label>
         </div>
         <button type="submit" class="btn btn-primary">Aceptar</button>
+        <div style="margin-top: 20px;">
+            <small id="registro" class="text-info">Todav&iacute;a no est&aacute;s registrado?,
+                Reg&iacute;strate</small><br>
+            <button type="button" class="btn btn-secondary"
+                onclick="location.href='/registro/registro.jsp'">Registrarse</button>
+
+        </div>
     </form>
 </body>
 
