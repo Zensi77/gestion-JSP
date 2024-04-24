@@ -7,7 +7,10 @@
         
 <%
     String mail = request.getParameter("mail");
-    String password = request.getParameter("password");
+    String contrasena = request.getParameter("password");
+
+    out.println("Mail: " + mail);
+    out.println("contrasena: " + contrasena);
 
     Connection con = null;
     PreparedStatement stmt = null;
@@ -18,25 +21,26 @@
         String envURL = System.getenv("JDBC_URL");
         String envUser = System.getenv("JDBC_USER");
         String envPass = System.getenv("JDBC_PASSWORD");
-        con = DriverManager.getConnection(envURL, envUser, envPass);
 
+        con = DriverManager.getConnection(envURL, envUser, envPass);
         if(con!=null)out.println("Conexión establecida");
-        
-        String sql = "SELECT * FROM usuarios WHERE mail = ? AND password = ?";
+        out.println("1");
+        String sql = "SELECT * FROM usuario WHERE email = ? AND contrasena = ?";
         stmt = con.prepareStatement(sql);
         stmt.setString(1, mail);
-        stmt.setString(2, password);
-
+        stmt.setString(2, contrasena);
+    out.println("2");
         rs = stmt.executeQuery();
 
+        out.println("3");
         if (rs.next()) {
             out.println("Usuario correcto");
-            response.sendRedirect("home/home");
+            out.println("<script>location.href='/home/home.jsp';</script>");
         } else {
-            response.sendRedirect("index");
+            out.println("<script>location.href='/index.jsp';</script>");
         }
     } catch (Exception e) {
-        e.printStackTrace();
+        out.println(e.getMessage());
     } finally {
         // Cerrar recursos
         if (rs != null) {

@@ -1,6 +1,18 @@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css"
+        integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@page import="java.sql.*" %>
-        <%@include file="../header/header.html" %>
+        <%@ include file="../header/header.html" %>
             <% // Vamos a ver si en la petición se nos ha indicado acción y controlador. 
                 // Si no, usaremos un controlador y una acción por defecto.
                 
@@ -9,7 +21,8 @@
                 
 
 
-<% if (action.equals("showAllMovies")) { %>
+    if (action.equals("showAllMovies")) { 
+%>
     <h2>Listado de películas</h2>
     <%
     try {
@@ -27,17 +40,17 @@
         ResultSet rs = st.executeQuery(sql);
     %>
         <div class="container">
-            <table align="center">
+            <table align="center" class="table table-hover">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Director</th>
-                        <th>Género</th>
-                        <th>Duración</th>
-                        <th>Año</th>
-                        <th>Cartel</th>
-                        <th colspan="3">Acciones</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Director</th>
+                        <th scope="col">Género</th>
+                        <th scope="col">Duración</th>
+                        <th scope="col">Año</th>
+                        <th scope="col">Cartel</th>
+                        <th scope="col" colspan="3">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,9 +59,15 @@
                         <td><%= rs.getString(1) %></td>
                         <td><%= rs.getString(2) %></td>
                         <td><%= rs.getString(3) %></td>
-                        <td><%= rs.getString(4) %> min</td>
-                        <td><%= rs.getString(5) %></td>
-                        <td><img src="https://educacionadistancia.juntadeandalucia.es/centros/almeria/pluginfile.php/962384/mod_folder/content/0/images/<%= rs.getString("poster") %>" height="150px"></td>
+                        <td><%= rs.getString(4) %></td>
+                        <td><%= rs.getString(5) %> min</td>
+                        <td><%= rs.getString(6) %></td>
+                        <% String ruta = rs.getString(7); 
+                            if (ruta == null) {
+                                ruta = "https://picsum.photos/100/100";
+                            }
+                        %>
+                        <td><img src='<%=ruta%>'></td>
                         <td><a href="#">Detalles</a></td>
                         <td><a href="#">Modificar</a></td>
                         <td><a href="#">Borrar</a></td>
@@ -67,3 +86,5 @@
     }
 } 
 %>
+
+

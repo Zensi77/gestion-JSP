@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS usuario(
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     nombre_usuario VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    contrasena VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS persona (
@@ -29,7 +29,9 @@ CREATE TABLE IF NOT EXISTS pelicula (
     director VARCHAR(255) NOT NULL,
     genero VARCHAR(255) NOT NULL,
     duracion INT NOT NULL,
-    anio_grabacion INT NOT NULL
+    anio_grabacion INT NOT NULL,
+    cartel VARCHAR(255),
+
 );
 
 CREATE TABLE IF NOT EXISTS actor (
@@ -59,7 +61,7 @@ CREATE TABLE IF NOT EXISTS direccion_pelicula(
 
 
 
-INSERT INTO usuario (email, password, nombre_usuario) VALUES 
+INSERT INTO usuario (email, contrasena, nombre_usuario) VALUES 
 ('root@root.es', 'root', 'Administrador'),
 ('user@user.es', 'user','Usuario Generico');
 
