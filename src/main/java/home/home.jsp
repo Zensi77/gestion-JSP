@@ -88,3 +88,13 @@
 %>
 
 
+<% if (action.equals("newMovie")) { %>
+    <h2>Insertar nueva película</h2>
+    <form action="insertMovie" method="post">
+        <div class="custom-file">
+    <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+    <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
+    </div>
+
+
+<% } %>
