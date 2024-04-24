@@ -30,8 +30,7 @@ CREATE TABLE IF NOT EXISTS pelicula (
     genero VARCHAR(255) NOT NULL,
     duracion INT NOT NULL,
     anio_grabacion INT NOT NULL,
-    cartel VARCHAR(255),
-
+    cartel VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS actor (
