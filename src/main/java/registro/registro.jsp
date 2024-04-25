@@ -27,10 +27,10 @@
             <div class="col-md-6 mb-3">
                 <label for="nombre">Nombre</label>
                 <input type="text" class="form-control" id="nombre" required>
-                <div class="valid-feedback">
+            <div class="valid-feedback">
                     Introduzca un nombre valido.
-                </div>
-            </div>
+        </div>
+        </div>
             <div class="col-md-6 mb-3">
                 <label for="apellido">Apellido</label>
                 <input type="text" class="form-control" id="apellido" required>
