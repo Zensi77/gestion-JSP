@@ -8,50 +8,52 @@
     <title>Login</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css"
-        integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+          integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
-        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
-        crossorigin="anonymous"></script>
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/registro/style/login.css">
 </head>
 
 <body>
-    <h1>Iniciar Sesion</h1>
+<h1>Iniciar Sesion</h1>
 
-    <form action="loginServlet.jsp" method="post">
-        <div class="form-group">
-            <label for="mail">Direccion email</label>
-            <input type="email" class="form-control" id="mail" name="mail" aria-describedby="emailHelp"
-                placeholder="Introduce email" value="user@user.es">
-            <small id="emailHelp" class="form-text text-muted">Nunca compartiremos tu correo electr&oacute;nico con
-                nadie
-                m&aacute;s.
-            </small>
-        </div>
-        <div class="form-group">
-            <label for="password">Contrase&ntilde;a</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Contrase&ntilde;a" value="user">
-        </div>
-        <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="recuerdame">
-            <label class="form-check-label" for="recuerdame">Recuerdame</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Aceptar</button>
-        <div style="margin-top: 20px;">
-            <small id="registro" class="text-info">Todav&iacute;a no est&aacute;s registrado?,
-                Reg&iacute;strate</small><br>
-            <button type="button" class="btn btn-secondary"
-                onclick="location.href='/registro/registro.jsp'">Registrarse</button>
+<form action="loginServlet.jsp" method="post">
+    <div class="form-group">
+        <label for="mail">Direccion email</label>
+        <input type="email" class="form-control" id="mail" name="mail" aria-describedby="emailHelp"
+               placeholder="Introduce email" value="user@user.es">
+        <small id="emailHelp" class="form-text text-muted">Nunca compartiremos tu correo electr&oacute;nico con
+            nadie
+            m&aacute;s.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="password">Contrase&ntilde;a</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Contrase&ntilde;a"
+               value="user">
+    </div>
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="recuerdame">
+        <label class="form-check-label" for="recuerdame">Recuerdame</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Aceptar</button>
+    <div style="margin-top: 20px;">
+        <small id="registro" class="text-info">Todav&iacute;a no est&aacute;s registrado?,
+            Reg&iacute;strate</small><br>
+        <button type="button" class="btn btn-secondary"
+                onclick="location.href='/registro/registro.jsp'">Registrarse
+        </button>
 
-        </div>
-    </form>
+    </div>
+</form>
 </body>
 
 </html>

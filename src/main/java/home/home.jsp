@@ -31,6 +31,7 @@
     Connection con = DriverManager.getConnection(envURL, envUser, envPass);
 
 
+// Mostrar todas las películas
     if (action.equals("showAllMovies")) {
 %>
 <h2>Listado de películas</h2>
@@ -97,6 +98,211 @@
     }
 %>
 
+
+<!-- Insertar película -->
+<% if (action.equals("newMovie")) { %>
+<h2>Insertar película</h2>
+
+<form class="needs-validation">
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="director">Director</label>
+            <input type="text" class="form-control" id="director" name="director">
+        </div>
+        <div class="form-row">
+            <div class="col-md-3 mb-3">
+                <label for="genero">Género</label>
+                <input type="text" class="form-control" id="genero" name="genero">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="duracion">Duración</label>
+                <input type="text" class="form-control" id="duracion" name="duracion">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-3 mb-3">
+                <label for="anio">Año</label>
+                <input type="text" class="form-control" id="anio" name="anio">
+            </div>
+            <div class="col-md-3 mb-4">
+                <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
+                <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-100"> <!-- Coloca el botón en una fila separada -->
+                <button class="btn btn-primary" type="submit" style="margin: 10px 0 10px 0;">Crear pelicula</button>
+            </div>
+        </div>
+    </div>
+</form>
+<%
+    Statement st = con.createStatement();
+    ResultSet rs = st.executeQuery("SELECT * FROM persona");
+%>
+
+<table class="table table-bordered" style="margin: 1%">
+    <thead>
+    <tr colspan="6"><h3>Lista de actores</h3></tr>
+    <tr>
+        <th scope="col">Actores / Dirección</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Actores / Dirección</th>
+        <th scope="col">Apellido</th>
+        <th scope="col">Actores / Dirección</th>
+        <th scope="col">Nombre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% while (rs.next()) { %>
+    <tr>
+        <td>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="actores[]" value="<%= rs.getInt(1) %>">
+                <label class="form-check-label">Actor</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="direccion[]" value="<%= rs.getInt(1) %>">
+                <label class="form-check-label">Dirección</label>
+            </div>
+        </td>
+        <td><%= rs.getString(2) %>
+        </td>
+        <td>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="actores[]" value="<%= rs.getInt(1) %>">
+                <label class="form-check-label">Actor</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="direccion[]" value="<%= rs.getInt(1) %>">
+                <label class="form-check-label">Dirección</label>
+            </div>
+        </td>
+        <td><%= rs.getString(3) %>
+        </td>
+        <td>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="actores[]" value="<%= rs.getInt(1) %>">
+                <label class="form-check-label">Actor</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="direccion[]" value="<%= rs.getInt(1) %>">
+                <label class="form-check-label">Dirección</label>
+            </div>
+        </td>
+        <td><%= rs.getString(2) %> <%= rs.getString(3) %>
+        </td>
+    </tr>
+    <% } %>
+    </tbody>
+</table>
+
+<button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Agregar personas</button>
+<% } %>
+
+
+<!-- Mostrar personas -->
+<% if (action.equals("showPeople")) { %>
+<h2>Listado de personas</h2>
+<%
+    try {
+        // Ejecutar una consulta SELECT
+        Statement st = con.createStatement();
+        String sql = "SELECT * FROM persona";
+        ResultSet rs = st.executeQuery(sql);
+%>
+
+<div class="container">
+    <table align="center" class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Año de nacimiento</th>
+            <th scope="col">Ciudad</th>
+            <th scope="col">Foto</th>
+            <th scope="col" colspan="3">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% while (rs.next()) { %>
+        <tr>
+            <% int id = Integer.parseInt(rs.getString(1)); %>
+            <td><%= id %>
+            </td>
+            <td><%= rs.getString(2) %>
+            </td>
+            <td><%= rs.getString(3) %>
+            </td>
+            <td><%= rs.getString(4) %>
+            </td>
+            <td><%= rs.getString(5) %>
+            </td>
+            <% String ruta = rs.getString(6);
+                if (ruta == null) {
+                    ruta = "https://picsum.photos/50/50";
+                }
+            %>
+            <td><img src='<%=ruta%>'></td>
+            <td><a href="home.jsp?action=infoPersona&id=<%=id%>" action="info"><span
+                    class="material-symbols-outlined">info</span></a></td>
+            <td><a href="home.jsp?action=editPersona&id=<%=id%>"><span class="material-symbols-outlined">edit</span></a>
+            </td>
+            <td><a href="home.jsp?action=deletePersona&id=<%=id%>"><span
+                    class="material-symbols-outlined">delete</span></a>
+            </td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+</div>
+
+<% } catch (SQLException e) {
+    out.println("Error al acceder a la BD: " + e.toString());
+}
+}
+%>
+
+
+<!-- Insertar persona -->
+<% if (action.equals("insertPerson")) { %>
+
+<h2>Insertar persona</h2>
+
+<form action="" class="needs-validation">
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="apellido">Apellido</label>
+            <input type="text" class="form-control" id="apellido" name="apellido">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-3 mb-3">
+            <label for="anio">Año de nacimiento</label>
+            <input type="text" class="form-control" id="anio" name="anio">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="ciudad">Ciudad</label>
+            <input type="text" class="form-control" id="ciudad" name="ciudad">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="foto">Foto</label>
+            <input type="file" class="custom-file-input" id="foto" name="foto">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12"> <!-- Coloca el botón en una fila separada -->
+            <button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Crear persona</button>
+        </div>
+    </div>
+</form>
+<% } %>
 
 <% if (action.equals("info")) { %>
 <h2>Información de la película</h2>
@@ -281,7 +487,8 @@
         </div>
         <div class="form-row">
             <div class="col-md-12"> <!-- Coloca el botón en una fila separada -->
-                <button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Confirmar cambios</button>
+                <button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Confirmar cambios
+                </button>
             </div>
         </div>
     </form>
@@ -300,7 +507,47 @@
 
         <div style="display: flex; justify-content: space-around;">
             <li class="list-group-item" style="width:95%;">
-                <%=id%>. <%= rsActores.getString(2) %> <%= rsActores.getString(3) %>
+                <%= rsActores.getString(2) %> <%= rsActores.getString(3) %>
+            </li>
+            <a href="home" style="align-self: center" id="<%=id%>">
+                <!-- En el href debería ir la ruta de la acción de eliminar -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-minus" width="24"
+                     height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+                    <path d="M9 12l6 0"/>
+                </svg>
+            </a>
+        </div>
+        <% } %>
+        <a href='ruta para añadir actor' style="margin: 10px 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="28"
+                 height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                <path d="M9 12h6"/>
+                <path d="M12 9v6"/>
+            </svg>
+        </a>
+    </ul>
+
+    <h3>Lista de direccion</h3>
+        <%
+    Statement stDireccion = con.createStatement();
+    String sqlDireccion = "SELECT persona.* FROM persona INNER JOIN direccion_pelicula ON persona.id = direccion_pelicula.id_persona WHERE direccion_pelicula.id_pelicula=" + request.getParameter("id");
+    ResultSet rsDireccion = st.executeQuery(sqlDireccion);
+    %>
+
+    <ul class="list-group">
+        <% while (rsDireccion.next()) {
+            int id = rsDireccion.getInt(1); %>
+
+        <div style="display: flex; justify-content: space-around;">
+            <li class="list-group-item" style="width:95%;">
+                <%= rsDireccion.getString(2) %> <%= rsDireccion.getString(3) %>
             </li>
             <a href="home" style="align-self: center" id="<%=id%>">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-minus" width="24"
@@ -312,14 +559,26 @@
                 </svg>
             </a>
         </div>
+
         <% } %>
+        <a href='ruta para añadir direccion' style="margin: 10px 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="28"
+                 height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                <path d="M9 12h6"/>
+                <path d="M12 9v6"/>
+            </svg>
+        </a>
+
     </ul>
+        <%} %>
 
-    <h3>
-            <%} %>
-
-            <% if (action.equals("deleteMovie")) { %>
-            <% 
+        <% if (action.equals("deleteMovie")) { %>
+        <%
+            try {
             int id = Integer.parseInt(request.getParameter("id"));
             Statement statement = con.createStatement();
             
@@ -327,81 +586,27 @@
             statement.executeUpdate(sql); 
 
             out.println("<script> alert('Película eliminada correctamente'); location.href = 'home.jsp?action=showAllMovies';</script>");
-            %>
+            } catch (SQLException e) {
+            out.println("<script> alert('No se ha podido eliminar la película'); location.href = 'home.jsp?action=showAllMovies';</script>");
+            }
+            } %>
+
+        <% if (action.equals("deletePersona")) {
+                try {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Statement statement = con.createStatement();
+
+                    String sql = "DELETE FROM persona WHERE id=" + id;
+                    int cambios = statement.executeUpdate(sql);
+
+                    if(cambios >=1) {
+                        out.println("<script> alert('Persona eliminada correctamente'); location.href = 'home.jsp?action=showPeople';</script>");
+                    }else {
+                        out.println("<script> alert('No se ha podido eliminar la persona'); location.href = 'home.jsp?action=showPeople';</script>");
+                    }
+                } catch (SQLException e) {
+                out.println("<script> alert('No se puede eliminar a un actor'); location.href = 'home.jsp?action=showPeople';</script>");
+                } 
+            }%>
 
 
-
-
-            <% } %>
-
-            <% if (action.equals("newMovie")) { %>
-        <h2>Insertar nueva película</h2>
-        <form action="insertMovie" method="post">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFileLang" lang="es">
-                <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
-            </div>
-                <% } %>
-
-
-                <% if (action.equals("showPeople")) { %>
-            <h2>Listado de personas</h2>
-                <%
-    try {
-        // Ejecutar una consulta SELECT
-        Statement st = con.createStatement();
-        String sql = "SELECT * FROM persona";
-        ResultSet rs = st.executeQuery(sql);
-    %>
-
-            <div class="container">
-                <table align="center" class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Año de nacimiento</th>
-                        <th scope="col">Ciudad</th>
-                        <th scope="col">Foto</th>
-                        <th scope="col" colspan="3">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% while (rs.next()) { %>
-                    <tr>
-                        <% int id = Integer.parseInt(rs.getString(1)); %>
-                        <td><%= id %>
-                        </td>
-                        <td><%= rs.getString(2) %>
-                        </td>
-                        <td><%= rs.getString(3) %>
-                        </td>
-                        <td><%= rs.getString(4) %>
-                        </td>
-                        <td><%= rs.getString(5) %>
-                        </td>
-                        <% String ruta = rs.getString(6);
-                            if (ruta == null) {
-                                ruta = "https://picsum.photos/50/50";
-                            }
-                        %>
-                        <td><img src='<%=ruta%>'></td>
-                        <td><a href="home.jsp?action=infoPersona&id=<%=id%>" action="info"><span
-                                class="material-symbols-outlined">info</span></a></td>
-                        <td><a href="home.jsp?action=editPersona&id=<%=id%>"><span class="material-symbols-outlined">edit</span></a>
-                        </td>
-                        <td><a href="home.jsp?action=deletePersona&id=<%=id%>"><span class="material-symbols-outlined">delete</span></a>
-                        </td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                </table>
-
-            </div>
-
-                <% } catch (SQLException e) {
-        out.println("Error al acceder a la BD: " + e.toString());
-    } 
-}
-%>
