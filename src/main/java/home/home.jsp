@@ -79,7 +79,8 @@
             <td><img src='<%=ruta%>'></td>
             <td><a href="home.jsp?action=info&id=<%=id%>" action="info"><span
                     class="material-symbols-outlined">info</span></a></td>
-            <td><a href="home.jsp?action=edit&id=<%=id%>"><span class="material-symbols-outlined">edit</span></a></td>
+            <td><a href="home.jsp?action=editMovie&id=<%=id%>"><span class="material-symbols-outlined">edit</span></a>
+            </td>
             <td><a href="home.jsp?action=deleteMovie&id=<%=id%>"><span
                     class="material-symbols-outlined">delete</span></a></td>
         </tr>
@@ -106,7 +107,7 @@
 <form class="needs-validation">
     <div class="form-row">
         <div class="col-md-6 mb-3">
-            <label for="director">Director</label>
+            <label for="director">Titulo</label>
             <input type="text" class="form-control" id="director" name="director">
         </div>
         <div class="form-row">
@@ -124,80 +125,75 @@
                 <label for="anio">Año</label>
                 <input type="text" class="form-control" id="anio" name="anio">
             </div>
-            <div class="col-md-3 mb-4">
+            <div class="col-md-6 mb-4">
                 <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                 <input type="file" class="custom-file-input" id="customFileLang" lang="es">
             </div>
         </div>
-        <div class="form-row">
-            <div class="col-md-100"> <!-- Coloca el botón en una fila separada -->
-                <button class="btn btn-primary" type="submit" style="margin: 10px 0 10px 0;">Crear pelicula</button>
-            </div>
-        </div>
     </div>
+    <%
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM persona");
+    %>
+    <br>
+
+    <table class="table table-bordered" style="margin: 1%">
+        <thead>
+        <tr>
+            <th scope="col">Actores / Dirección</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Actores / Dirección</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Actores / Dirección</th>
+            <th scope="col">Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% int counter = 0; %>
+        <% while (rs.next() && counter < 3 * 100) { %>
+        <tr>
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="actor_<%= rs.getInt(1) %>" value="actor">
+                    <label class="form-check-label">Actor</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="director_<%= rs.getInt(1) %>"
+                           value="director">
+                    <label class="form-check-label">Dirección</label>
+                </div>
+            </td>
+            <td><%= rs.getString(2) %> <%= rs.getString(3) %>
+            </td>
+            <%
+                int actorId = rs.getInt(1);
+                for (int i = 0; i < 2; i++) {
+                    if (rs.next()) {
+            %>
+            <td>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="actor_<%= rs.getInt(1) %>" value="actor">
+                    <label class="form-check-label">Actor</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="director_<%= rs.getInt(1) %>"
+                           value="director">
+                    <label class="form-check-label">Dirección</label>
+                </div>
+            </td>
+            <td><%= rs.getString(2) %> <%= rs.getString(3) %>
+            </td>
+            <%
+                    }
+                }
+                counter += 3;
+            %>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Agregar personas</button>
 </form>
-<%
-    Statement st = con.createStatement();
-    ResultSet rs = st.executeQuery("SELECT * FROM persona");
-%>
-
-<table class="table table-bordered" style="margin: 1%">
-    <thead>
-    <tr colspan="6"><h3>Lista de actores</h3></tr>
-    <tr>
-        <th scope="col">Actores / Dirección</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Actores / Dirección</th>
-        <th scope="col">Apellido</th>
-        <th scope="col">Actores / Dirección</th>
-        <th scope="col">Nombre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% while (rs.next()) { %>
-    <tr>
-        <td>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="actores[]" value="<%= rs.getInt(1) %>">
-                <label class="form-check-label">Actor</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="direccion[]" value="<%= rs.getInt(1) %>">
-                <label class="form-check-label">Dirección</label>
-            </div>
-        </td>
-        <td><%= rs.getString(2) %>
-        </td>
-        <td>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="actores[]" value="<%= rs.getInt(1) %>">
-                <label class="form-check-label">Actor</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="direccion[]" value="<%= rs.getInt(1) %>">
-                <label class="form-check-label">Dirección</label>
-            </div>
-        </td>
-        <td><%= rs.getString(3) %>
-        </td>
-        <td>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="actores[]" value="<%= rs.getInt(1) %>">
-                <label class="form-check-label">Actor</label>
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="direccion[]" value="<%= rs.getInt(1) %>">
-                <label class="form-check-label">Dirección</label>
-            </div>
-        </td>
-        <td><%= rs.getString(2) %> <%= rs.getString(3) %>
-        </td>
-    </tr>
-    <% } %>
-    </tbody>
-</table>
-
-<button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Agregar personas</button>
 <% } %>
 
 
@@ -441,8 +437,9 @@
 
         <% } %>
 
-        <% if (action.equals("edit")) {
-    String sql = "SELECT * FROM pelicula WHERE id=" + request.getParameter("id");
+        <% if (action.equals("editMovie")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+    String sql = "SELECT * FROM pelicula WHERE id=" + id;
     Statement st = con.createStatement();
     ResultSet rs = st.executeQuery(sql);
 
@@ -456,7 +453,7 @@
 %>
     <h2>Editar película</h2>
 
-    <form action="" class="needs-validation">
+    <form action="home.jsp?action=editMovieOk&id=<%=id%>" class="needs-validation" method="post">
         <div class="form-row">
             <div class="col-md-6 mb-3">
                 <label for="titulo">Título</label>
@@ -503,13 +500,14 @@
 
     <ul class="list-group">
         <% while (rsActores.next()) {
-            int id = rsActores.getInt(1); %>
+            int idActor = rsActores.getInt(1); %>
 
         <div style="display: flex; justify-content: space-around;">
             <li class="list-group-item" style="width:95%;">
                 <%= rsActores.getString(2) %> <%= rsActores.getString(3) %>
             </li>
-            <a href="home" style="align-self: center" id="<%=id%>">
+            <a href="home.jsp?action=deleteActorFromMovie&idPelicula=<%=id%>&idActor=<%=idActor%>"
+               style="align-self: center" id="<%=id%>">
                 <!-- En el href debería ir la ruta de la acción de eliminar -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-minus" width="24"
                      height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
@@ -521,17 +519,6 @@
             </a>
         </div>
         <% } %>
-        <a href='ruta para añadir actor' style="margin: 10px 10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="28"
-                 height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
-                <path d="M9 12h6"/>
-                <path d="M12 9v6"/>
-            </svg>
-        </a>
     </ul>
 
     <h3>Lista de direccion</h3>
@@ -543,21 +530,12 @@
 
     <ul class="list-group">
         <% while (rsDireccion.next()) {
-            int id = rsDireccion.getInt(1); %>
+            int idDirector = rsDireccion.getInt(1); %>
 
         <div style="display: flex; justify-content: space-around;">
             <li class="list-group-item" style="width:95%;">
                 <%= rsDireccion.getString(2) %> <%= rsDireccion.getString(3) %>
             </li>
-            <a href="home" style="align-self: center" id="<%=id%>">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-minus" width="24"
-                     height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
-                    <path d="M9 12l6 0"/>
-                </svg>
-            </a>
         </div>
 
         <% } %>
@@ -610,3 +588,26 @@
             }%>
 
 
+<% if (action.equals("editMovieOk")) {
+    String id = request.getParameter("id");
+    String titulo = request.getParameter("titulo");
+    String director = request.getParameter("director");
+    String genero = request.getParameter("genero");
+    String duracion = request.getParameter("duracion");
+    String anio = request.getParameter("anio");
+
+    Statement st = con.createStatement();
+    String sql = "UPDATE pelicula SET titulo='" + titulo + "', director='" + director + "', genero='" + genero + "', duracion='" + duracion + "', anio_grabacion='" + anio + "' WHERE id=" + id;
+    st.executeUpdate(sql);
+    response.sendRedirect("home.jsp?action=editMovie&id=" + id);
+}
+
+    if (action.equals("deleteActorFromMovie")) {
+        String id = request.getParameter("idActor");
+        Statement st = con.createStatement();
+        String sql = "DELETE FROM actor WHERE id_persona=" + id + " AND id_pelicula=" + request.getParameter("idPelicula");
+        st.executeUpdate(sql);
+        response.sendRedirect("home.jsp?action=editMovie&id=" + request.getParameter("idPelicula"));
+    }
+
+%>

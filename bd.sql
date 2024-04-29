@@ -38,11 +38,11 @@ CREATE TABLE IF NOT EXISTS actor (
     id_persona INT NOT NULL,
     PRIMARY KEY (id_pelicula, id_persona),
     FOREIGN KEY (id_pelicula) REFERENCES pelicula(id)
-    ON DELETE CASCADE
-    ON UPDATE RESTRICT,
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
     FOREIGN KEY (id_persona) REFERENCES persona(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS direccion_pelicula(
