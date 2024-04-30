@@ -241,11 +241,11 @@
                 }
             %>
             <td><img src='<%=ruta%>'></td>
-            <td><a href="home.jsp?action=infoPersona&id=<%=id%>" action="info"><span
+            <td><a href="home.jsp?action=infoPerson&id=<%=id%>" action="info"><span
                     class="material-symbols-outlined">info</span></a></td>
-            <td><a href="home.jsp?action=editPersona&id=<%=id%>"><span class="material-symbols-outlined">edit</span></a>
+            <td><a href="home.jsp?action=editPerson&id=<%=id%>"><span class="material-symbols-outlined">edit</span></a>
             </td>
-            <td><a href="home.jsp?action=deletePersona&id=<%=id%>"><span
+            <td><a href="home.jsp?action=deletePerson&id=<%=id%>"><span
                     class="material-symbols-outlined">delete</span></a>
             </td>
         </tr>
@@ -267,7 +267,7 @@
 
 <h2>Insertar persona</h2>
 
-<form action="" class="needs-validation">
+<form action="home.jsp?action=insertPersonOk" method="post" class="needs-validation">
     <div class="form-row">
         <div class="col-md-6 mb-3">
             <label for="nombre">Nombre</label>
@@ -281,7 +281,7 @@
     <div class="form-row">
         <div class="col-md-3 mb-3">
             <label for="anio">Año de nacimiento</label>
-            <input type="text" class="form-control" id="anio" name="anio">
+            <input type="date" class="form-control" id="anio" name="anio">
         </div>
         <div class="col-md-3 mb-3">
             <label for="ciudad">Ciudad</label>
@@ -300,10 +300,10 @@
 </form>
 <% } %>
 
+
+
 <% if (action.equals("infoMovie")) { %>
 <h2>Información de la película</h2>
-
-
 <div class="container">
     <table align="center" class="table">
         <thead class="thead-dark">
@@ -491,16 +491,24 @@
     </form>
 
 
-    <h3>Lista de actores</h3>
 
-        <%
-        String sqlActores = "SELECT persona.* FROM persona INNER JOIN actor ON persona.id = actor.id_persona WHERE actor.id_pelicula=" + request.getParameter("id");
-        ResultSet rsActores = st.executeQuery(sqlActores);
-    %>
+<%
+String sqlActores = "SELECT persona.* FROM persona INNER JOIN actor ON persona.id = actor.id_persona WHERE actor.id_pelicula=" + request.getParameter("id");
+ResultSet rsActores = st.executeQuery(sqlActores);
+boolean h1 = false;
+%>
 
-    <ul class="list-group">
-        <% while (rsActores.next()) {
-            int idActor = rsActores.getInt(1); %>
+<ul class="list-group">
+    <% while (rsActores.next()) {
+
+        if (!h1) { 
+            %><h3>Lista de actores</h3><%
+            h1 = true; 
+        }
+    int idActor = rsActores.getInt(1); 
+%>
+
+
 
         <div style="display: flex; justify-content: space-around;">
             <li class="list-group-item" style="width:95%;">
@@ -518,18 +526,23 @@
                 </svg>
             </a>
         </div>
-        <% } %>
-    </ul>
+    <% } %>
+</ul> 
 
-    <h3>Lista de direccion</h3>
         <%
     Statement stDireccion = con.createStatement();
     String sqlDireccion = "SELECT persona.* FROM persona INNER JOIN direccion_pelicula ON persona.id = direccion_pelicula.id_persona WHERE direccion_pelicula.id_pelicula=" + request.getParameter("id");
     ResultSet rsDireccion = st.executeQuery(sqlDireccion);
+    boolean h1Dir = false;
     %>
 
     <ul class="list-group">
         <% while (rsDireccion.next()) {
+
+            if (!h1Dir) { %>      
+                <h3>Lista de directores</h3>
+                <% h1Dir = true;
+            }
             int idDirector = rsDireccion.getInt(1); %>
 
         <div style="display: flex; justify-content: space-around;">
@@ -569,9 +582,10 @@
             out.println("<script> alert('No se ha podido eliminar la película'); location.href = 'home.jsp?action=showAllMovies';</script>");
             }
             } %>
-
         <%
-    if (action.equals("infoPersona")) {
+
+        
+    if (action.equals("infoPerson")) {
         int id = Integer.parseInt(request.getParameter("id"));
         String sql = "SELECT * FROM persona WHERE id=" + id;
         Statement st = con.createStatement();
@@ -639,25 +653,154 @@
         <li class="list-group-item"><%= rsPeliculasDirigidas.getString(2) %>
         </li>
             <% } %>
-            <%}
+
+    </ul>
+    <% } %>
+
+
+
+
+
+<% 
+    if (action.equals("editPerson")) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String sql = "SELECT * FROM persona WHERE id=" + id;
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        rs.next();
+        String nombre = rs.getString(2);
+        String apellido = rs.getString(3);
+        int anio = rs.getInt(4);
+        String ciudad = rs.getString(5);
+        String foto = rs.getString(6);
 %>
-            <% if (action.equals("deletePersona")) {
-                try {
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    Statement statement = con.createStatement();
+    <h2>Editar persona</h2>
+    <form action="home.jsp?action=editPersonOk&id=<%=id%>" class="needs-validation" method="post">
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" value="<%=nombre%>">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="apellido">Apellido</label>
+                <input type="text" class="form-control" id="apellido" name="apellido" value="<%=apellido%>">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-3 mb-3">
+                <label for="anio">Año de nacimiento</label>
+                <input type="date" class="form-control" id="anio" name="anio" value="<%=anio%>">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" class="form-control" id="ciudad" name="ciudad" value="<%=ciudad%>">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="foto">Foto</label>
+                <input type="file" class="custom-file-input" id="foto" name="foto" value="<%=foto%>">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-100"> <!-- Coloca el botón en una fila separada -->
+                <button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Confirmar cambios
+                </button>
+            </div>
+        </div>
+    </form>
 
-                    String sql = "DELETE FROM persona WHERE id=" + id;
-                    int cambios = statement.executeUpdate(sql);
+    <% 
+        boolean h1 = false;
+        String sqlPelicula = "SELECT pelicula.* FROM persona INNER JOIN actor ON persona.id = actor.id_persona INNER JOIN pelicula ON pelicula.id = actor.id_pelicula WHERE actor.id_persona=" + request.getParameter("id");
+        ResultSet rsPelicula = null;
 
-                    if(cambios >=1) {
-                        out.println("<script> alert('Persona eliminada correctamente'); location.href = 'home.jsp?action=showPeople';</script>");
-                    }else {
-                        out.println("<script> alert('No se ha podido eliminar la persona'); location.href = 'home.jsp?action=showPeople';</script>");
-                    }
-                } catch (SQLException e) {
-                out.println("<script> alert('No se puede eliminar a un actor'); location.href = 'home.jsp?action=showPeople';</script>");
-                } 
-            }%>
+        try {
+            rsPelicula = st.executeQuery(sqlPelicula);
+        } catch (SQLException e) {
+            out.println("Error al acceder a la BD: " + e.toString());
+        }
+    %>
+    <h3>Lista de películas en las que aparece</h3>
+    <ul>
+        <% 
+            while (rsPelicula.next()) {
+                int idPelicula = rsPelicula.getInt(1); 
+        %>
+        <div style="display: flex; justify-content: space-around;">
+            <li class="list-group-item" style="width:95%;">
+                <%= rsPelicula.getString(2) %>
+            </li>
+            <a href="home.jsp?action=deleteMovieFromActor&idPelicula=<%=idPelicula%>&idActor=<%=id%>"
+               style="align-self: center" id="<%=id%>">
+                <!-- En el href debería ir la ruta de la acción de eliminar -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-minus" width="24"
+                     height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+                    <path d="M9 12l6 0"/>
+                </svg>
+            </a>
+        </div>
+        <% } %>
+    </ul>
+
+    <% 
+        boolean h1Dir = false;
+        String sqlDir = "SELECT pelicula.* FROM persona INNER JOIN direccion_pelicula ON persona.id = direccion_pelicula.id_persona INNER JOIN pelicula ON pelicula.id = direccion_pelicula.id_pelicula WHERE direccion_pelicula.id_persona=" + id + " ORDER BY pelicula.titulo";
+        ResultSet rsDir = null;
+
+        try {
+            rsDir = st.executeQuery(sqlDir);
+        } catch (SQLException e) {
+            out.println("Error al acceder a la BD: " + e.toString());
+        }
+
+        while (rsDir.next()) {
+            if (!h1Dir) {
+        %> 
+            <h3>Lista de películas dirigidas</h3>
+        <% 
+                h1Dir = true;
+            }
+
+            int idPelicula = rsDir.getInt(1); 
+        %>
+        <div style="display: flex; justify-content: space-around;">
+            <li class="list-group-item" style="width:95%;">
+                <%= rsDir.getString(2) %>
+            </li>
+            <a href="home.jsp?action=deleteMovieFromDirector&idPelicula=<%=idPelicula%>&idDirector=<%=id%>"
+               style="align-self: center" id="<%=id%>">
+                <!-- En el href debería ir la ruta de la acción de eliminar -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-minus" width="24"
+                     height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+                    <path d="M9 12l6 0"/>
+                </svg>
+            </a>
+        </div>
+    <% } %>
+<% } %>
+
+
+
+<% if (action.equals("deletePersona")) {
+    try {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Statement statement = con.createStatement();
+        String sql = "DELETE FROM persona WHERE id=" + id;
+        int cambios = statement.executeUpdate(sql);
+        if(cambios >=1) {
+            out.println("<script> alert('Persona eliminada correctamente'); location.href = 'home.jsp?action=showPeople';</script>");
+        }else {
+            out.println("<script> alert('No se ha podido eliminar la persona'); location.href = 'home.jsp?action=showPeople';</script>");
+        }
+    } catch (SQLException e) {
+    out.println("<script> alert('No se puede eliminar a un actor'); location.href = 'home.jsp?action=showPeople';</script>");
+    } 
+}%>
 
 
 <% if (action.equals("editMovieOk")) {
@@ -688,5 +831,56 @@
         String sql = "DELETE FROM direccion_pelicula WHERE id_persona=" + id + " AND id_pelicula=" + request.getParameter("idPelicula");
         st.executeUpdate(sql);
         response.sendRedirect("home.jsp?action=editMovie&id=" + request.getParameter("idPelicula"));
+    }
+
+    if(action.equals("insertPersonOk")) {
+        String nombre = request.getParameter("nombre");
+        String apellido = request.getParameter("apellido");
+        String anio = request.getParameter("anio");
+        String ciudad = request.getParameter("ciudad");
+        int rows = 0;
+
+        try {
+            Statement st = con.createStatement();
+            String sql = "INSERT INTO persona (nombre, apellido, anio_nacimiento, ciudad) VALUES ('" + nombre + "', '" + apellido + "', " + anio + ", '" + ciudad + "')";
+            rows = st.executeUpdate(sql);
+        } catch (SQLException e) {
+            out.println("Error al insertar la persona: " + e.toString());
+        }
+
+        if(rows >= 1) {
+            out.println("<script> alert('Persona Insertada correctamente'); location.href = 'home.jsp?action=showPeople';</script>");
+        } else {
+            response.sendRedirect("home.jsp?action=insertPerson");
+        }
+    }
+
+    if (action.equals("editPersonOk")) {
+        String id = request.getParameter("id");
+        String nombre = request.getParameter("nombre");
+        String apellido = request.getParameter("apellido");
+        String anio = request.getParameter("anio");
+        String ciudad = request.getParameter("ciudad");
+
+        Statement st = con.createStatement();
+        String sql = "UPDATE persona SET nombre='" + nombre + "', apellido='" + apellido + "', anio_nacimiento='" + anio + "', ciudad='" + ciudad + "' WHERE id=" + id;
+        st.executeUpdate(sql);
+        response.sendRedirect("home.jsp?action=editPerson&id=" + id);
+    }
+
+    if (action.equals("deleteMovieFromActor")) {
+        String id = request.getParameter("idActor");
+        Statement st = con.createStatement();
+        String sql = "DELETE FROM actor WHERE id_persona=" + id + " AND id_pelicula=" + request.getParameter("idPelicula");
+        st.executeUpdate(sql);
+        response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("id"));
+    }
+
+    if (action.equals("deleteMovieFromDirector")) {
+        String id = request.getParameter("idDirector");
+        Statement st = con.createStatement();
+        String sql = "DELETE FROM direccion_pelicula WHERE id_persona=" + id + " AND id_pelicula=" + request.getParameter("idPelicula");
+        st.executeUpdate(sql);
+        response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("id"));
     }
 %>
