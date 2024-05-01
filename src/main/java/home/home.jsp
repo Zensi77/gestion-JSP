@@ -104,11 +104,11 @@
 <% if (action.equals("newMovie")) { %>
 <h2>Insertar película</h2>
 
-<form class="needs-validation">
+<form action="home.jsp?action=insertNewMovie" method="post" class="needs-validation">
     <div class="form-row">
         <div class="col-md-6 mb-3">
-            <label for="director">Titulo</label>
-            <input type="text" class="form-control" id="director" name="director">
+            <label for="titulo">Titulo</label>
+            <input type="text" class="form-control" id="titulo" name="titulo">
         </div>
         <div class="form-row">
             <div class="col-md-3 mb-3">
@@ -116,11 +116,14 @@
                 <input type="text" class="form-control" id="genero" name="genero">
             </div>
             <div class="col-md-3 mb-3">
+                <label for="duracion">Director</label>
+                <input type="text" class="form-control" id="director" name="director">
+        </div>
+        <div class="form-row">
+            <div class="col-md-3 mb-3">
                 <label for="duracion">Duración</label>
                 <input type="text" class="form-control" id="duracion" name="duracion">
             </div>
-        </div>
-        <div class="form-row">
             <div class="col-md-3 mb-3">
                 <label for="anio">Año</label>
                 <input type="text" class="form-control" id="anio" name="anio">
@@ -149,8 +152,7 @@
         </tr>
         </thead>
         <tbody>
-        <% int counter = 0; %>
-        <% while (rs.next() && counter < 3 * 100) { %>
+        <% while (rs.next()) { %>
         <tr>
             <td>
                 <div class="form-check">
@@ -167,17 +169,16 @@
             </td>
             <%
                 int actorId = rs.getInt(1);
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 2; i++) { // 2 veces, una para actor y otra para director
                     if (rs.next()) {
             %>
             <td>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="actor_<%= rs.getInt(1) %>" value="actor">
+                    <input type="checkbox" class="form-check-input" name=actores[] value=<%= rs.getInt(1)%>>
                     <label class="form-check-label">Actor</label>
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="director_<%= rs.getInt(1) %>"
-                           value="director">
+                    <input type="checkbox" class="form-check-input" name=directores[] value=<%= rs.getInt(1) %>>
                     <label class="form-check-label">Dirección</label>
                 </div>
             </td>
@@ -186,7 +187,6 @@
             <%
                     }
                 }
-                counter += 3;
             %>
         </tr>
         <% } %>
@@ -195,6 +195,7 @@
     <button class="btn btn-primary" type="submit" style="margin: 10px 0 10 0;">Agregar personas</button>
 </form>
 <% } %>
+
 
 
 <!-- Mostrar personas -->
@@ -345,9 +346,15 @@
     </table>
 </div>
 
-<h2>Actores de la película</h2>
 <div class="container">
-    <table align="center" class="table">
+        <%
+            String sqlActores = "SELECT persona.* FROM persona INNER JOIN actor ON persona.id = actor.id_persona WHERE actor.id_pelicula=" + request.getParameter("id");
+            boolean h1 = false;
+            ResultSet rsActores = st.executeQuery(sqlActores);
+            while (rsActores.next()) {
+                if(!h1) { %> <h3>Lista de actores</h3> 
+                <% h1 = true; %>
+                    <table align="center" class="table">
         <thead class="thead-dark">
         <tr>
             <th scope="col">Nombre</th>
@@ -358,10 +365,7 @@
         </tr>
         </thead>
         <tbody>
-        <%
-            String sqlActores = "SELECT persona.* FROM persona INNER JOIN actor ON persona.id = actor.id_persona WHERE actor.id_pelicula=" + request.getParameter("id");
-            ResultSet rsActores = st.executeQuery(sqlActores);
-            while (rsActores.next()) { %>
+        <% } %>
         <tr>
             <td><%= rsActores.getString(2) %>
             </td>
@@ -386,9 +390,15 @@
     </table>
 </div>
 
-<h2>Direccion de la película</h2>
 <div class="container">
-    <table align="center" class="table">
+        <%
+            String sqlDirectores = "SELECT persona.* FROM persona INNER JOIN direccion_pelicula ON persona.id = direccion_pelicula.id_persona WHERE direccion_pelicula.id_pelicula=" + request.getParameter("id");
+            ResultSet rsDirectores = st.executeQuery(sqlDirectores);
+            boolean h2 = false;
+            while (rsDirectores.next()) { 
+                if(!h2) { %> <h3>Lista de directores</h3> 
+                <% h2 = true; %>
+                    <table align="center" class="table">
         <thead class="thead-dark">
         <tr>
             <th scope="col">Nombre</th>
@@ -399,10 +409,8 @@
         </tr>
         </thead>
         <tbody>
-        <%
-            String sqlDirectores = "SELECT persona.* FROM persona INNER JOIN direccion_pelicula ON persona.id = direccion_pelicula.id_persona WHERE direccion_pelicula.id_pelicula=" + request.getParameter("id");
-            ResultSet rsDirectores = st.executeQuery(sqlDirectores);
-            while (rsDirectores.next()) { %>
+        <% } %>
+                
         <tr>
             <td><%= rsDirectores.getString(2) %>
             </td>
@@ -585,7 +593,7 @@ boolean h1 = false;
         <%
 
         
-    if (action.equals("infoPerson")) {
+    if (action.equals("ah")) {
         int id = Integer.parseInt(request.getParameter("id"));
         String sql = "SELECT * FROM persona WHERE id=" + id;
         Statement st = con.createStatement();
@@ -883,4 +891,179 @@ boolean h1 = false;
         st.executeUpdate(sql);
         response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("id"));
     }
-%>
+
+    if (request.getParameter("action") != null && request.getParameter("action").equals("insertNewMovie")) {
+    // Obtiene los parámetros del formulario
+    String titulo = request.getParameter("titulo");
+    String genero = request.getParameter("genero");
+    String director = request.getParameter("director");
+    String duracion = request.getParameter("duracion");
+    String anio = request.getParameter("anio");
+    String[] actores = request.getParameterValues("actores[]"); // Se obtienen los actores de la película
+    String[] directores = request.getParameterValues("directores[]"); // Se obtienen los directores de la película
+
+    // Inserta la película en la tabla de películas
+    String insertPeliculaQuery = "INSERT INTO pelicula (titulo, genero, duracion, anio_grabacion, director) VALUES (?, ?, ?, ?, ?)";
+    PreparedStatement insertPeliculaStmt = con.prepareStatement(insertPeliculaQuery);
+    insertPeliculaStmt.setString(1, titulo);
+    insertPeliculaStmt.setString(2, genero);
+    insertPeliculaStmt.setString(3, duracion);
+    insertPeliculaStmt.setString(4, anio);
+    insertPeliculaStmt.setString(5, director);
+    try{
+        insertPeliculaStmt.executeUpdate();
+    } catch (SQLException e) {
+        out.println("Error al insertar la película: " + e.toString());
+    }
+
+    // Obtiene el ID de la película recién insertada
+    Statement getIdStmt = con.createStatement();
+    ResultSet idResult = getIdStmt.executeQuery("SELECT LAST_INSERT_ID()");
+    int peliculaId = 0;
+    if (idResult.next()) {
+        peliculaId = idResult.getInt(1);
+    }
+
+    // Inserta los actores de la película en la tabla de actores
+    if (actores != null) {
+        String insertActorQuery = "INSERT INTO actor (id_persona, id_pelicula) VALUES (?, ?)";
+        PreparedStatement insertActorStmt = con.prepareStatement(insertActorQuery);
+        for (String actor : actores) {
+            insertActorStmt.setString(1, actor);
+            insertActorStmt.setInt(2, peliculaId);
+            try {
+                insertActorStmt.executeUpdate();
+            } catch (SQLException e) {
+                out.println("Error al insertar el actor: " + e.toString());
+            }
+        }
+    }
+
+    // Inserta los directores de la película en la tabla de directores
+    if (directores != null) {
+        String insertDirectorQuery = "INSERT INTO direccion_pelicula (id_persona, id_pelicula) VALUES (?, ?)";
+        PreparedStatement insertDirectorStmt = con.prepareStatement(insertDirectorQuery);
+        for (String directoresMovie : directores) {
+            insertDirectorStmt.setString(1, directoresMovie);
+            insertDirectorStmt.setInt(2, peliculaId);
+            try {
+                insertDirectorStmt.executeUpdate();
+            } catch (SQLException e) {
+                out.println("Error al insertar el director: " + e.toString());
+            }
+        }
+    }
+
+    response.sendRedirect("home.jsp?action=infoMovie&id=" + peliculaId);
+}
+
+if(action.equals("busqueda")){
+    String busqueda = request.getParameter("searchbox");
+    String sqlPelicula = "SELECT * FROM pelicula WHERE titulo LIKE '%" + busqueda + "%'";
+    Statement st = con.createStatement();
+    ResultSet rsPelicula = st.executeQuery(sqlPelicula);
+    boolean h1 = false;
+    %>
+    <table align="center" class="table">
+        <%
+    
+    while(rsPelicula.next()){
+        if(!h1){
+            %><h3>Resultados de la búsqueda</h3><%
+            h1 = true; %>
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Director</th>
+                    <th scope="col">Género</th>
+                    <th scope="col">Duración</th>
+                    <th scope="col">Año</th>
+                    <th scope="col">Cartel</th>
+                    <th scope="col" colspan="3">Acciones</th>
+                </tr>
+                </thead>
+        <%
+        }
+        %>
+        <tbody>
+        <tr>
+            <td><%= rsPelicula.getString(2) %>
+            </td>
+            <td><%= rsPelicula.getString(3) %>
+            </td>
+            <td><%= rsPelicula.getString(4) %>
+            </td>
+            <td><%= rsPelicula.getString(5) %> min</td>
+            <td><%= rsPelicula.getString(6) %>
+            </td>
+            <%
+                String ruta = rsPelicula.getString(7);
+                if (ruta == null) {
+                    ruta = "https://picsum.photos/100/100";
+                }
+            %>
+            <td><img src='<%= ruta %>'></td>
+            <td><a href="home.jsp?action=infoMovie&id=<%=rsPelicula.getInt(1)%>"><span class="material-symbols-outlined">info</span></a></td>
+            <td><a href="home.jsp?action=editMovie&id=<%=rsPelicula.getInt(1)%>"><span class="material-symbols-outlined">edit</span></a></td>
+            <td><a href="home.jsp?action=deleteMovie&id=<%=rsPelicula.getInt(1)%>"><span class="material-symbols-outlined">delete</span></a></td>
+    <%}
+    %>
+        </tbody>
+    </table>
+    %>
+
+<%
+    String sqlPersona = "SELECT * FROM persona WHERE nombre LIKE '%" + busqueda + "%' OR apellido LIKE '%" + busqueda + "%'";
+    ResultSet rsPersona = st.executeQuery(sqlPersona);
+    boolean h2 = false;
+    %>
+    <table align="center" class="table">
+        <%
+    while(rsPersona.next()){
+        if(!h2){
+            %><h3>Resultados de la búsqueda</h3><%
+            h2 = true; %>
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Año de nacimiento</th>
+                    <th scope="col">Ciudad</th>
+                    <th scope="col">Foto</th>
+                    <th scope="col" colspan="3">Acciones</th>
+                </tr>
+                </thead>
+        <%
+        }
+        %>
+        <tbody>
+        <tr>
+            <td><%= rsPersona.getString(2) %>
+            </td>
+            <td><%= rsPersona.getString(3) %>
+            </td>
+            <td><%= rsPersona.getString(4) %>
+            </td>
+            <td><%= rsPersona.getString(5) %>
+            </td>
+            <%
+                String ruta = rsPersona.getString(6);
+                if (ruta == null) {
+                    ruta = "https://picsum.photos/100/100";
+                }
+            %>
+            <td><img src='<%= ruta %>'></td>
+            <td><a href="home.jsp?action=ah&id=<%=rsPersona.getInt(1)%>"><span class="material-symbols-outlined">info</span></a></td>
+            <td><a href="home.jsp?action=editPerson&id=<%=rsPersona.getInt(1)%>"><span class="material-symbols-outlined">edit</span></a></td>
+            <td><a href="home.jsp?action=deletePersona&id=<%=rsPersona.getInt(1)%>"><span class="material-symbols-outlined">delete</span></a></td>
+    <%}
+    %>
+        </tbody>
+    </table>
+    %>
+<%
+    }
+    
+<%}
+
+
