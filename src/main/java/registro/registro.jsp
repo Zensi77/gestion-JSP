@@ -22,18 +22,18 @@
 
 <body>
     <h1>Registro</h1>
-    <form action="resigtoServlet.jsp" class="needs-validation" novalidate>
+    <form action="registroServlet.jsp" method="post" class="needs-validation" novalidate>
         <div class="form-row">
             <div class="col-md-6 mb-3">
                 <label for="nombre">Nombre</label>
-                <input type="text" class="form-control" id="nombre" required>
+                <input type="text" class="form-control" name="nombre" required>
             <div class="valid-feedback">
                     Introduzca un nombre valido.
         </div>
         </div>
             <div class="col-md-6 mb-3">
                 <label for="apellido">Apellido</label>
-                <input type="text" class="form-control" id="apellido" required>
+                <input type="text" class="form-control" name="apellido" required>
                 <div class="valid-feedback">
                     Introduzca un apellido valido.
                 </div>
@@ -45,9 +45,9 @@
                 <label for="usuario">Usuario</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupPrepend">@</span>
+                        <span class="input-group-text" name="inputGroupPrepend">@</span>
                     </div>
-                    <input type="text" class="form-control" id="usuario" placeholder="Username"
+                    <input type="text" class="form-control" name="usuario" placeholder="Username"
                         aria-describedby="inputGroupPrepend" required>
                     <div class="invalid-feedback">
                         Elije un nombre de usuario valido.
@@ -57,28 +57,28 @@
 
             <div class="col-md-2 mb-3">
                 <label for="ciudad">Ciudad</label>
-                <input type="text" class="form-control" id="ciudad">
+                <input type="text" class="form-control" name="ciudad">
                 <div class="invalid-feedback">
                     Introduzca una ciudad valida.
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <label for="fecha_nacimiento">Fecha Nacimiento</label>
-                <input type="date" class="form-control" id="fecha_nacimiento" required>
+                <label for="fecha_nacimiento">A&ntilde;o Nacimiento</label>
+                <input type="text" class="form-control" name="fecha_nacimiento" required>
             </div>
         </div>
         <div class="form-row">
             <div class="col-md-6 mb-3">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="">
+                <input type="email" class="form-control" name="email" placeholder="">
                 <div class="invalid-feedback">
                     Por favor, introduzca una dirección de correo electrónico válida.
                 </div>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="password">Contrase&ntilde;a</label>
-                <input type="password" class="form-control" id="password" required>
+                <input type="password" class="form-control" name="password" required>
                 <div class="invalid-feedback">
                     Por favor, introduzca una contrase&ntilde;a valida.
                 </div>
@@ -86,7 +86,7 @@
         </div>
         <div class="form-group">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="condiciones" required>
+                <input class="form-check-input" type="checkbox" value="" name="condiciones" required>
                 <label class="form-check-label" for="condiciones">
                     Acepto los terminos y condiciones
                 </label>

@@ -1,52 +1,48 @@
-package registro;
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.ResultSet"%>
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.sql.*;
 
-            throws ServletException, IOException {
-        String nombre = request.getParameter("nombre");
-        String apellido = request.getParameter("apellido");
-        String fecha_nacimiento = request.getParameter("anio_nacimiento");
-        String ciudad = request.getParameter("ciudad");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/peliculas", "user",
-                    "user");
-            Statement statement = connection.createStatement();
+<%
+/*
+Aquí se recogen los datos del formulario de registro y se insertan en la base de datos.
+*/
+String nombre = request.getParameter("nombre");
+String apellido = request.getParameter("apellido");
+String usuario = request.getParameter("usuario");
+String ciudad = request.getParameter("ciudad");
+String fecha_nacimiento = request.getParameter("fecha_nacimiento");
+String email = request.getParameter("email");
+String password = request.getParameter("password");
 
-            String insertPersona = "INSERT INTO persona (nombre, apellido, anio_nacimiento, ciudad) VALUES (?, ?, ?, ?)";
-            String idPersona = "SELECT count(*) FROM persona";
-            String insertUsuario = "INSERT INTO usuario (id_persona, email, password) VALUES (?, ?, ?)";
+out.println(nombre + " " + apellido + " " + usuario + " " + ciudad + " " + fecha_nacimiento + " " + email + " " + password);
 
-            PreparedStatement stmt = connection.prepareStatement(insertPersona);
-            stmt.setString(1, nombre);
-            stmt.setString(2, apellido);
-            stmt.setString(3, fecha_nacimiento);
-            stmt.setString(4, ciudad);
-            stmt.executeUpdate();
+Class.forName("com.mysql.cj.jdbc.Driver");
+String envURL = System.getenv("JDBC_URL");
+String envUser = System.getenv("JDBC_USER");
+String envPass = System.getenv("JDBC_PASSWORD");
+Connection con = DriverManager.getConnection(envURL, envUser, envPass);
+Statement stmt = con.createStatement();
 
-            ResultSet rs = statement.executeQuery(idPersona);
-            int id = 0;
-            if (rs.next()) {
-                id = rs.getInt(1);
-            }
+try {
+    int num1 = stmt.executeUpdate("insert into usuario (nombre_usuario, email, contrasena) values ('"+ usuario + "','" + email + "','" + password + "')");
+    
+    ResultSet rs = stmt.executeQuery("select id from usuario where nombre_usuario = '" + usuario + "'");
+    rs.next();
+    int idUsuario = rs.getInt("id");
 
-            stmt = connection.prepareStatement(insertUsuario);
-            stmt.setInt(1, id);
-            stmt.setString(2, email);
-            stmt.setString(3, password);
-            stmt.executeUpdate();
+    int num2 =stmt.executeUpdate("insert into persona (nombre, apellido, ciudad, anio_nacimiento, id_usuario) values ('" + nombre + "','" + apellido + "','" + ciudad + "'," + fecha_nacimiento + ",'" + idUsuario + "')");
+    
+    if (num1 == 1 && num2 == 1) {
+        out.println("<script>location.href='/home/home.jsp';</script>");
+    } else {
+        out.println("<script>location.href='/index.jsp';</script>");
+    }
+} catch (Exception e) {
+    out.println(e.toString());
+}
 
-            if (id > 0) {
-                response.sendRedirect("home/home.jsp?nombre=" + nombre + "&apellido=" + apellido);
-            } else {
 
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+%>
+

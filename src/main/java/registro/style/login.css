@@ -1,19 +1,18 @@
 body {
-    background: rgb(2, 0, 36);
-    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 39%, rgba(0, 212, 255, 1) 78%);
-    ;
+    background: #fefae0;
+    
 }
 
 h1 {
     text-align: center;
-    color: #f0f0f0;
+    color: #d4a373;
     font-size: 2.5em;
     margin: 0;
     padding: 0;
 }
 
 form {
-    background-color: red;
+    background-color: #d4a373;
     margin: 5% 20%;
     padding: 5% 5%;
     align-items: center;

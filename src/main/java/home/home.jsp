@@ -34,7 +34,7 @@
 // Mostrar todas las películas
     if (action.equals("showAllMovies")) {
 %>
-<h2>Listado de películas</h2>
+<h2 style="text-align: center;">Listado de películas</h2>
 <%
     try {
         // Ejecutar una consulta SELECT
@@ -200,7 +200,7 @@
 
 <!-- Mostrar personas -->
 <% if (action.equals("showPeople")) { %>
-<h2>Listado de personas</h2>
+<h2 style="text-align: center;">Listado de personas</h2>
 <%
     try {
         // Ejecutar una consulta SELECT
@@ -1006,11 +1006,11 @@ if(action.equals("busqueda")){
             <td><a href="home.jsp?action=infoMovie&id=<%=rsPelicula.getInt(1)%>"><span class="material-symbols-outlined">info</span></a></td>
             <td><a href="home.jsp?action=editMovie&id=<%=rsPelicula.getInt(1)%>"><span class="material-symbols-outlined">edit</span></a></td>
             <td><a href="home.jsp?action=deleteMovie&id=<%=rsPelicula.getInt(1)%>"><span class="material-symbols-outlined">delete</span></a></td>
-    <%}
+    <%
+    }
     %>
         </tbody>
     </table>
-    %>
 
 <%
     String sqlPersona = "SELECT * FROM persona WHERE nombre LIKE '%" + busqueda + "%' OR apellido LIKE '%" + busqueda + "%'";
@@ -1056,14 +1056,14 @@ if(action.equals("busqueda")){
             <td><a href="home.jsp?action=ah&id=<%=rsPersona.getInt(1)%>"><span class="material-symbols-outlined">info</span></a></td>
             <td><a href="home.jsp?action=editPerson&id=<%=rsPersona.getInt(1)%>"><span class="material-symbols-outlined">edit</span></a></td>
             <td><a href="home.jsp?action=deletePersona&id=<%=rsPersona.getInt(1)%>"><span class="material-symbols-outlined">delete</span></a></td>
-    <%}
+    <%
+    }
     %>
         </tbody>
     </table>
-    %>
 <%
     }
+%>
     
-<%}
 
 
