@@ -19,9 +19,9 @@ String password = request.getParameter("password");
 out.println(nombre + " " + apellido + " " + usuario + " " + ciudad + " " + fecha_nacimiento + " " + email + " " + password);
 
 Class.forName("com.mysql.cj.jdbc.Driver");
-String envURL = System.getenv("JDBC_URL");
-String envUser = System.getenv("JDBC_USER");
-String envPass = System.getenv("JDBC_PASSWORD");
+String envURL = System.getenv("JDBC_URL"); // "jdbc:mysql://localhost:3306/peliculas"
+String envUser = System.getenv("JDBC_USER"); // "root"
+String envPass = System.getenv("JDBC_PASSWORD"); // "root"
 Connection con = DriverManager.getConnection(envURL, envUser, envPass);
 Statement stmt = con.createStatement();
 
