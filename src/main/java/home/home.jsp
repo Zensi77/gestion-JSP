@@ -589,7 +589,7 @@ boolean h1 = false;
         <%
 
         
-    if (action.equals("ah")) {
+    if (action.equals("infoPerson")) {
         int id = Integer.parseInt(request.getParameter("id"));
         String sql = "SELECT * FROM persona WHERE id=" + id;
         Statement st = con.createStatement();
@@ -632,28 +632,37 @@ boolean h1 = false;
         <%
         } %>
 
-    <h2>Peliculas en las que ha participado</h2>
 
         <%
             String sqlPeliculas = "SELECT pelicula.* FROM pelicula INNER JOIN actor ON pelicula.id = actor.id_pelicula WHERE actor.id_persona=" + id;
             ResultSet rsPeliculas = st.executeQuery(sqlPeliculas);
+            boolean h1 = false;
         %>
 
     <ul class="list-group" style="margin: 1%">
-        <% while (rsPeliculas.next()) { %>
+        <% while (rsPeliculas.next()) { 
+            if (!h1) { %>
+        <h2>Peliculas en las que ha participado</h2>
+        <% h1 = true;
+        } %>
+        %>
         <li class="list-group-item"><%= rsPeliculas.getString(2) %>
         </li>
         <% } %>
     </ul>
 
-    <h2>Peliculas que ha dirigido</h2>
         <%
             String sqlPeliculasDirigidas = "SELECT pelicula.* FROM pelicula INNER JOIN direccion_pelicula ON pelicula.id = direccion_pelicula.id_pelicula WHERE direccion_pelicula.id_persona=" + id;
             ResultSet rsPeliculasDirigidas = st.executeQuery(sqlPeliculasDirigidas);
         %>
 
     <ul class="list-group" style="margin: 1%">
-        <% while (rsPeliculasDirigidas.next()) { %>
+        <% while (rsPeliculasDirigidas.next()) { 
+            if (!h1) { %>
+        <h2>Peliculas dirigidas</h2>
+        <% h1 = true;
+        }
+        %>
         <li class="list-group-item"><%= rsPeliculasDirigidas.getString(2) %>
         </li>
         <% } %>
@@ -663,10 +672,15 @@ boolean h1 = false;
 
         <%
     if (action.equals("editPerson")) {
-        int id = Integer.parseInt(request.getParameter("id"));
+        String id = request.getParameter("id");
         String sql = "SELECT * FROM persona WHERE id=" + id;
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery(sql);
+        ResultSet rs = null;
+        try{
+            rs = st.executeQuery(sql);
+        } catch (SQLException e) {
+            out.println("Error al acceder a la BD: " + e.toString());
+        }
         rs.next();
         String nombre = rs.getString(2);
         String apellido = rs.getString(3);
@@ -719,10 +733,15 @@ boolean h1 = false;
             out.println("Error al acceder a la BD: " + e.toString());
         }
     %>
-    <h3>Lista de películas en las que aparece</h3>
     <ul>
         <%
             while (rsPelicula.next()) {
+                if (!h1) {
+        %>
+        <h3>Lista de películas en las que ha participado</h3>
+        <%
+            h1 = true;
+        }
                 int idPelicula = rsPelicula.getInt(1);
         %>
         <div style="display: flex; justify-content: space-around;">
@@ -789,7 +808,7 @@ boolean h1 = false;
         // En este bloque de código se realiza la eliminación de unna persona de la base de datos.
         // Se obtiene el ID de la persona a eliminar y se ejecuta una consulta SQL para eliminarla.
         // Al finalizar la eliminación, se emite un mensaje de confirmación y se redirige a la página de listado de personas.
-        if (action.equals("deletePersona")) {
+        if (action.equals("deletePerson")) {
     try {
         int id = Integer.parseInt(request.getParameter("id"));
         Statement statement = con.createStatement();
@@ -890,7 +909,6 @@ boolean h1 = false;
         String apellido = request.getParameter("apellido");
         String anio = request.getParameter("anio");
         String ciudad = request.getParameter("ciudad");
-
         Statement st = con.createStatement();
         String sql = "UPDATE persona SET nombre='" + nombre + "', apellido='" + apellido + "', anio_nacimiento='" + anio + "', ciudad='" + ciudad + "' WHERE id=" + id;
         st.executeUpdate(sql);
@@ -907,7 +925,7 @@ boolean h1 = false;
         Statement st = con.createStatement();
         String sql = "DELETE FROM actor WHERE id_persona=" + id + " AND id_pelicula=" + request.getParameter("idPelicula");
         st.executeUpdate(sql);
-        response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("id"));
+        response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("idActor"));
     }
 
 /*
@@ -920,7 +938,7 @@ boolean h1 = false;
         Statement st = con.createStatement();
         String sql = "DELETE FROM direccion_pelicula WHERE id_persona=" + id + " AND id_pelicula=" + request.getParameter("idPelicula");
         st.executeUpdate(sql);
-        response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("id"));
+        response.sendRedirect("home.jsp?action=editPerson&id=" + request.getParameter("idDirector"));
     }
 
 /*
@@ -1105,7 +1123,7 @@ if(action.equals("busqueda")){
                     class="material-symbols-outlined">info</span></a></td>
             <td><a href="home.jsp?action=editPerson&id=<%=rsPersona.getInt(1)%>"><span
                     class="material-symbols-outlined">edit</span></a></td>
-            <td><a href="home.jsp?action=deletePersona&id=<%=rsPersona.getInt(1)%>"><span
+            <td><a href="home.jsp?action=deletePerson&id=<%=rsPersona.getInt(1)%>"><span
                     class="material-symbols-outlined">delete</span></a></td>
                 <%
     }
