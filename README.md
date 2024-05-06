@@ -10,6 +10,8 @@ El Sistema CRUD de Películas en JSP es una aplicación web que ofrece funcional
 - Leer información de películas existentes.
 - Actualizar la información de películas.
 - Eliminar películas de la base de datos.
+- Crear y borrar Usuarios/Personas con su correspondiente coorelacion
+- AActualizar informacion de usuarios
 
 ## Requisitos
 
